@@ -33,12 +33,10 @@
             <td><?php echo rupiah($value->beban_nominal); ?></td>
             <td><?php echo $value->beban_ket; ?></td>
             <td>
-               <!--Edit-->
-               <a href="javascript:void(0);" 
-                  data-toggle="modal" data-target="#Modal_Edit<?php echo $value->id_beban;?>" 
-                  class="btn-edit">
-                  <i class="icon feather icon-edit f-w-600 f-16 m-r-15 text-c-green"></i>
-                </a> 
+              <!--Edit-->
+              <a href="javascript:void(0);" data-toggle="modal" data-target="#Modal_Edit" class="btn-edit" data-id="<?php echo $value->id_beban; ?>">
+                <i class="icon feather icon-edit f-w-600 f-16 m-r-15 text-c-green"></i>
+              </a>
 
               <!--Hapus-->
               <a href="<?php echo site_url('C_Beban/delete/' . $value->id_beban) ?>" onclick="return confirm('Apakah kamu yakin ingin menghapus data ini?')"> <i class="feather icon-trash-2 f-w-600 f-16 text-c-red"></i></a>
@@ -78,23 +76,31 @@
             <input type="date" class="form-control" name="beban_tanggal">
           </div>
 
-         <div class="form-group">
+          <div class="form-group">
             <label>Kode Beban</label>
             <input type="text" class="form-control" id="kode_beban" name="kode_beban" value="BB<?php echo sprintf("%04s", $kode_beban) ?>" readonly>
           </div>
 
-            <div class="form-group">
-              <label>Jenis Beban</label>
-              <select name="rid_akun" class="form-control" value="rid_akun">
-                <?php 
-                $rid_akun = $this->db->get('t_m_akun2');
-                foreach ($rid_akun->result() as $row ) {
-
-                 ?>
-                 <option <?php if($row->id_akun2 == $value->rid_akun){ echo 'selected="selected"';} ?> value="<?=$row->id_akun2; ?>"><?php echo $row->kode_akun2.' '.'-'.' '.$row->nama_akun2;?></option>
-               <?php }?>
-             </select>
-           </div>
+          <div class="form-group">
+            <label>Jenis Beban</label>
+            <select name="rid_akun" class="form-control" value="rid_akun">
+              <?php
+              $groupid = 001;
+              $star = false;
+              foreach ($bebans as $row) : ?>
+                <?php if ($row->id_akun1 != $groupid) : ?>
+                  <?= $star ? "</optgroup>" : ''; ?>
+                  <optgroup label="<?= $row->nama_akun1; ?>">
+                    <option value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
+                    <?php $groupid = $row->id_akun1;
+                    $start = true; ?>
+                  <?php else : ?>
+                    <option value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
+                <?php endif;
+              endforeach; ?>
+                  </optgroup>
+            </select>
+          </div>
 
           <div class="form-group">
             <label>Nominal Beban</label>
@@ -120,107 +126,124 @@
 <!-- MODAL TAMBAH AKUN! SELESAI !-->
 
 <!-- MODAL EDIT AKUN !-->
-<?php
-foreach($C_Beban as $key => $value)
-{
-  ?>
-  <div class="modal fade" id="Modal_Edit<?php echo $value->id_beban;?>" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <form action="<?php echo base_url('C_Beban/edit_action')?>" method="post">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Edit Beban</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+
+<div class="modal fade" id="Modal_Edit" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <form action="<?php echo base_url('C_Beban/edit_action') ?>" method="post">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Beban</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <h5>Edit Daftar Beban</h5>
+
+          <div class="form-group">
+            <label></label>
+            <input type="text" class="form-control" hidden="" name="id_beban" value="">
           </div>
-
-          <div class="modal-body">
-            <h5>Edit Daftar Beban</h5>
-
-            <div class="form-group">
-              <label></label>
-              <input type="text" class="form-control" hidden="" name="id_beban" value="<?=$value->id_beban; ?>">
-            </div>
 
           <div class="form-group">
             <label>Tanggal Beban</label>
-            <input type="date" class="form-control" name="beban_tanggal" value="<?=$value->beban_tanggal; ?>">
+            <input type="date" class="form-control" name="beban_tanggal">
           </div>
 
-            <div class="form-group">
-              <label>Jenis Beban</label>
-              <select name="beban_serba" class="form-control" value="beban_serba">
-                        <optgroup label="Beban Gaji">
-                                          <?php 
-                $id_beban = $this->db->get('tm_beban');
-                foreach ($id_beban->result() as $row ) {
+          <div class="form-group">
+            <label>Kode Beban</label>
+            <input type="text" class="form-control" id="kode_beban" name="kode_beban" value="BB<?php echo sprintf("%04s", $kode_beban) ?>" readonly>
+          </div>
 
-                 ?>
-                 <option <?php if($row->beban_serba == $value->beban_serba){ echo 'selected="selected"'; } ?> 
-                 value="<?=$row->beban_serba; ?>"><?php echo $row->beban_serba;?></option>
-               
-                        <option value="Beban Gaji Guru">Beban Gaji Guru</option>
-                        <option value="Beban Gaji Karyawan Lainnya">Beban Gaji Karyawan Lainnya</option>
-                        <optgroup label="Bonus Dan Tunjangan">
-                        <option value="THR Guru">THR Guru</option>
-                        <option value="THR Karyawan Lainnya">THR Karyawan Lainnya</option>
-                        <option value="Bonus Guru">Bonus Guru</option>
-                        <option value="Bonus Karyawan Lainnya">Bonus Karyawan Lainnya</option>
-                        <option value="Bonus Tour">Bonus Tour</option>
-                        <optgroup label="Beban Eskul">
-                        <option value="Gaji Pelatih">Gaji Pelatih</option>
-                        <option value="Perlengkapan Eskul">Perlengkapan Eskul</option>
-                        <optgroup label="Beban Operasional">
-                        <option value="Beban Listrik">Beban Listrik</option>
-                        <option value="Beban Penyusutan Peralatan">Beban Penyusutan Peralatan</option>
-                        <option value="Beban Sewa">Beban Sewa</option>
-                        <option value="Beban Kendaraan">Beban Kendaraan</option>
-                        <option value="Beban Internet">Beban Internet/Pulsa</option>
-                        <option value="Prive">Prive</option>
-                        <optgroup label="Beban Lainnya">
-                        <option value="Beban Pelatihan">Beban Pelatihan/Workshop</option>
-                        <option value="Beban Kegiatan Anak">Beban Kegiatan Anak</option>
-                        <option value="Beban Kegiatan OrangTua">Beban Kegiatan OrangTua</option>
-                        <option value="Beban Rapor">Beban Rapor</option>
-                        <option value="Beban Barang Inventaris">Beban Barang Inventaris</option>
-                        <option value="Beban Gedung">Beban Gedung</option>
-                        <option value="Beban Operasional Lainnya">Beban Operasional Lainnya</option>
-                        <?php }?>
-                    </select>
-           </div>
+          <div class="form-group">
+            <label>Jenis Beban</label>
+            <select name="rid_akun" class="form-control" value="rid_akun">
+              <?php
+              $groupid = 001;
+              $star = false;
+              foreach ($bebans as $row) : ?>
+                <?php if ($row->id_akun1 != $groupid) : ?>
+                  <?= $star ? "</optgroup>" : ''; ?>
+                  <optgroup label="<?= $row->nama_akun1; ?>">
+                    <option value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
+                    <?php $groupid = $row->id_akun1;
+                    $start = true; ?>
+                  <?php else : ?>
+                    <option value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
+                <?php endif;
+              endforeach; ?>
+                  </optgroup>
+            </select>
+          </div>
 
           <div class="form-group">
             <label>Nominal Beban</label>
-            <input type="text" class="form-control" name="beban_nominal" value="<?=$value->beban_nominal; ?>">
+            <input type="text" class="form-control" name="beban_nominal" placeholder="Nominal Beban">
           </div>
 
           <div class="form-group">
             <label>Keterangan</label>
-            <input type="text" class="form-control" name="beban_ket" value="<?=$value->beban_ket; ?>">
+            <input type="text" class="form-control" name="beban_ket" placeholder="Keterangan">
           </div>
 
-         </div>
-         <div class="modal-footer">
+
+
+        </div>
+        <div class="modal-footer">
           <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
           <button type="Submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
         </div>
-      </form>
-    </div>
+    </form>
   </div>
 </div>
-<?php } ?> 
-<!-- MODAL EDIT AKUN! SELESAI !--> 
+<!-- MODAL EDIT AKUN! SELESAI !-->
 
+<script>
+  const bebans = <?= json_encode($C_Beban) ?>;
+  let elModalEdit = document.querySelector("#Modal_Edit");
+  let elBtnEdits = document.querySelectorAll(".btn-edit");
+  [...elBtnEdits].forEach(edit => {
+    edit.addEventListener("click", (e) => {
+      let id = edit.getAttribute("data-id");
+      let Beban = bebans.filter(beban => {
+        if (beban.id_beban == id)
+          return beban;
+      });
+      const {
+        id_beban,
+        beban_tanggal,
+        rid_akun,
+        beban_nominal,
+        beban_ket,
+        kode_beban
+      } = Beban[0];
+
+      elModalEdit.querySelector("[name=id_beban]").value = id_beban;
+      elModalEdit.querySelector("[name=beban_tanggal]").value = beban_tanggal;
+      elModalEdit.querySelector("[name=beban_nominal]").value = beban_nominal;
+      elModalEdit.querySelector("[name=beban_ket]").value = beban_ket;
+      elModalEdit.querySelector("[name=kode_beban]").value = kode_beban;
+      [...elModalEdit.querySelectorAll("option.rid_akun")].forEach(rid => {
+        if (rid.getAttribute("value") == rid_akun) {
+          rid.setAttribute("selected", 'selected')
+        }
+      })
+
+
+
+    })
+  })
+</script>
 
 
 <!-- Untuk rupiah pemisah angka koma dan RP !-->
 <?php
 
-function rupiah($angka){
-  
-  $hasil_rupiah = "Rp " . number_format($angka,2,',','.');
+function rupiah($angka)
+{
+
+  $hasil_rupiah = "Rp " . number_format($angka, 2, ',', '.');
   return $hasil_rupiah;
- 
 }
 ?>

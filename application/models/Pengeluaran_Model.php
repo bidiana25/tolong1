@@ -1,62 +1,75 @@
 	<?php
- class Pengeluaran_Model extends CI_Model{
+	class Pengeluaran_model extends CI_Model
+	{
 
-  	public function select_pengeluaran(){
- 	$this->db->select('*');
-    $this->db->from('jurnal_kk a'); 
-    $this->db->join('t_m_akun2 b', 'a.jurnalkk_rid=b.id_akun2');    
-   $akun = $this->db->get ();
-    return $akun->result ();
- 	}
+		public function select_pengeluaran()
+		{
+			$this->db->select('*');
+			$this->db->from('tm_beban a');
+			$this->db->join('t_m_akun2 b', 'a.rid_akun=b.id_akun2');
+			$beban = $this->db->get();
 
- 	public function select_by_id($id){
- 		$this->db->where('id_kamar',$id);
- 		return $this->db->get('tblkamar')->row();
- 	}
+			return $beban->result();
+		}
+		public function select_beban()
+		{
+			$this->db->select('*');
+			$this->db->from('tm_beban a');
+			$this->db->join('t_m_akun2 b', 'a.rid_akun=b.id_akun2');
 
- 	function tambah($data){
-		    $this->db->insert('jurnal_kk', $jkk);
-		    return TRUE;
+			$beban = $this->db->get();
+
+			return $beban->result();
+		}
+		public function getBebans()
+		{
+			$this->db->select('*');
+			$this->db->from('t_m_akun2  b');
+			$this->db->join('t_m_akun1 a', 'a.id_akun1=b.rid_akun1');
+			$this->db->where("b.rid_akun1", "9");
+			$this->db->or_where("b.rid_akun1", "5");
+			$this->db->or_where("b.rid_akun1", "6");
+			$beban = $this->db->get();
+
+			return $beban->result();
 		}
 
- 	public function delete($id){
-		$this->db->where('id_pemasukan',$id);
-		$this->db->delete('tm_pemasukan');
+		public function select_by_id($id)
+		{
+			$this->db->where('id_kamar', $id);
+			return $this->db->get('tblkamar')->row();
 		}
 
-		public function update_pemasukan($data,$id){
- 		$this->db->where('id_pemasukan',$id);
- 		return $this->db->update('tm_pemasukan',$data);
- 	}
+		function tambah1($data)
+		{
+			$this->db->insert('tm_beban', $data);
+			return TRUE;
+		}
 
+		function tambah2($jkk)
+		{
+			$this->db->insert('jurnal_kk', $jkk);
+			return TRUE;
+		}
 
-// Untuk sum semua nilai uang
- 	public function get_sum_beban(){
-	$sql = "SELECT sum(debit_beban) as beban from jurnal_kk";
-	$result = $this->db->query($sql);
-	return $result->row()->beban;
+		public function delete($id)
+		{
+			$this->db->where('id_beban', $id);
+			$this->db->delete('tm_beban');
+		}
+
+		public function update_beban($data, $id)
+		{
+			$this->db->where('id_beban', $id);
+			return $this->db->update('tm_beban', $data);
+		}
+
+		public function cekkodebeban()
+		{
+			$query = $this->db->query("SELECT MAX(kode_beban) as kode_beban from tm_beban");
+			$hasil = $query->row();
+			return $hasil->kode_beban;
+		}
 	}
 
- 	public function get_sum_perlengkapan(){
-	$sql = "SELECT sum(debit_perlengkapan) as perlengkapan from jurnal_kk";
-	$result = $this->db->query($sql);
-	return $result->row()->perlengkapan;
-	}
-
- 	public function get_sum_hutang(){
-	$sql = "SELECT sum(debit_hutang) as hutang from jurnal_kk";
-	$result = $this->db->query($sql);
-	return $result->row()->hutang;
-	}
-
-	 public function get_sum_kas(){
-	$sql = "SELECT sum(kreditkas) as kreditkas from jurnal_kk";
-	$result = $this->db->query($sql);
-	return $result->row()->kreditkas;
-	}
-
-
-
- }
- 
-?>
+	?>

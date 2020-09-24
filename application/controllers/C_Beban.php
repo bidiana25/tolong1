@@ -8,18 +8,19 @@ class C_Beban extends MY_Controller
   {
     parent::__construct();
 
-    $this->load->model('Beban_Model');
+    $this->load->model('Pengeluaran_model');
   }
 
   public function index()
   {
-    $dariDB = $this->Beban_Model->cekkodebeban();
+    $dariDB = $this->Pengeluaran_model->cekkodebeban();
     // contoh JRD0004, angka 3 adalah awal pengambilan angka, dan 4 jumlah angka yang diambil
-        $nourut = substr($dariDB, 3, 4);
-        $kodeBebanSekarang = $nourut + 1;
+    $nourut = substr($dariDB, 3, 4);
+    $kodeBebanSekarang = $nourut + 1;
 
     $data = [
-      "C_Beban" => $this->Beban_Model->select_beban(),
+      "C_Beban" => $this->Pengeluaran_model->select_beban(),
+      "bebans" => $this->Pengeluaran_model->getBebans(),
       "title" => "Daftar Beban/Biaya",
       "description" => "Daftar Beban/Biaya",
       'kode_beban' => $kodeBebanSekarang
@@ -28,31 +29,12 @@ class C_Beban extends MY_Controller
   }
 
 
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
   public function delete($id)
   {
-    $this->Beban_Model->delete($id);
+    $this->Pengeluaran_model->delete($id);
     $this->session->set_flashdata('notif', '<div class="alert alert-danger icons-alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button><p><strong>Success!</strong> Data Beban Berhasil Dihapus!</p></div>');
     redirect('/C_Beban');
   }
@@ -72,7 +54,7 @@ class C_Beban extends MY_Controller
       'beban_nominal' => $beban_nominal,
       'beban_ket' => $beban_ket,
       'kode_beban' => $kode_beban
-    ); 
+    );
 
     //untuk di jurnalkk(keluar kas)
     $jurnalkk_tanggal = $this->input->post("beban_tanggal");
@@ -87,12 +69,12 @@ class C_Beban extends MY_Controller
       'debit_beban' => $beban_nominal,
       'kreditkas' => $beban_nominal,
       'kode_transaksi' => $kode_beban
-    ); 
+    );
 
     //model beban
-    $this->Beban_Model->tambah1($data);
+    $this->Pengeluaran_model->tambah1($data);
     //model jurnal keluar kas
-     $this->Beban_Model->tambah2($jkk);
+    $this->Pengeluaran_model->tambah2($jkk);
 
     $this->session->set_flashdata('notif', '<div class="alert alert-info icons-alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"> <i class="icofont icofont-close-line-circled"></i></button><p><strong>Data Beban Berhasil Ditambahkan!</strong></p></div>');
     redirect('C_Beban');
@@ -102,16 +84,16 @@ class C_Beban extends MY_Controller
   {
     $id = $this->input->post("id_beban");
     $beban_tanggal = $this->input->post("beban_tanggal");
-    $beban_serba = $this->input->post("beban_serba");
+    $rid_akun = $this->input->post("rid_akun");
     $beban_nominal = $this->input->post("beban_nominal");
     $beban_ket = $this->input->post("beban_ket");
     $data = array(
       'beban_tanggal' => $beban_tanggal,
-      'beban_serba' => $beban_serba,
+      'rid_akun' => $rid_akun,
       'beban_nominal' => $beban_nominal,
       'beban_ket' => $beban_ket
     );
-    $this->Beban_Model->update_beban($data, $id);
+    $this->Pengeluaran_model->update_beban($data, $id);
     $this->session->set_flashdata('notif', '<div class="alert alert-info icons-alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"> <i class="icofont icofont-close-line-circled"></i></button><p><strong>Data Beban Berhasil Diupdate!</strong></p></div>');
     redirect('/C_Beban');
   }

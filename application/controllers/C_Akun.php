@@ -22,27 +22,6 @@ class C_Akun extends MY_Controller
   }
 
 
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   public function delete($id)
   {

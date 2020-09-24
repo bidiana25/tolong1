@@ -8,20 +8,17 @@ class C_JurKelkas extends MY_Controller
   {
     parent::__construct();
 
-    $this->load->model('Pengeluaran_Model');
+    $this->load->model('Pengeluaran_model');
   }
 
   public function index()
   {
     $data = [
-      "C_JurKelkas" => $this->Pengeluaran_Model->select_pengeluaran(),
+      "pengeluaran_kas" => $this->Pengeluaran_model->select_pengeluaran(),
       "title" => "Jurnal Pengeluaran Kas",
       "description" => "Jurnal Pengeluaran Kas"
     ];
-    $data['sum_beban'] = $this->Pengeluaran_Model->get_sum_beban();
-    $data['sum_perlengkapan'] = $this->Pengeluaran_Model->get_sum_perlengkapan();
-    $data['sum_hutang'] = $this->Pengeluaran_Model->get_sum_hutang();
-    $data['sum_kas'] = $this->Pengeluaran_Model->get_sum_kas();
+
     $this->render_backend('template/backend/pages/Jurnal_Pengeluaran', $data);
   }
 
