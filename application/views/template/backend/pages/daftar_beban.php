@@ -91,11 +91,11 @@
                 <?php if ($row->id_akun1 != $groupid) : ?>
                   <?= $star ? "</optgroup>" : ''; ?>
                   <optgroup label="<?= $row->nama_akun1; ?>">
-                    <option value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
+                    <option class="rid_akun" value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
                     <?php $groupid = $row->id_akun1;
                     $start = true; ?>
                   <?php else : ?>
-                    <option value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
+                    <option class="rid_akun" value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
                 <?php endif;
               endforeach; ?>
                   </optgroup>
@@ -166,11 +166,11 @@
                 <?php if ($row->id_akun1 != $groupid) : ?>
                   <?= $star ? "</optgroup>" : ''; ?>
                   <optgroup label="<?= $row->nama_akun1; ?>">
-                    <option value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
+                    <option class="rid_akun" value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
                     <?php $groupid = $row->id_akun1;
                     $start = true; ?>
                   <?php else : ?>
-                    <option value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
+                    <option class="rid_akun" value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
                 <?php endif;
               endforeach; ?>
                   </optgroup>
@@ -201,7 +201,9 @@
 
 <script>
   const bebans = <?= json_encode($C_Beban) ?>;
+  const rids = <?= json_encode($bebans) ?>;
   let elModalEdit = document.querySelector("#Modal_Edit");
+  console.log(elModalEdit);
   let elBtnEdits = document.querySelectorAll(".btn-edit");
   [...elBtnEdits].forEach(edit => {
     edit.addEventListener("click", (e) => {
@@ -216,16 +218,21 @@
         rid_akun,
         beban_nominal,
         beban_ket,
+        id_akun2,
         kode_beban
       } = Beban[0];
 
+      console.log(Beban[0]);
       elModalEdit.querySelector("[name=id_beban]").value = id_beban;
       elModalEdit.querySelector("[name=beban_tanggal]").value = beban_tanggal;
       elModalEdit.querySelector("[name=beban_nominal]").value = beban_nominal;
       elModalEdit.querySelector("[name=beban_ket]").value = beban_ket;
       elModalEdit.querySelector("[name=kode_beban]").value = kode_beban;
-      [...elModalEdit.querySelectorAll("option.rid_akun")].forEach(rid => {
-        if (rid.getAttribute("value") == rid_akun) {
+      let elOptRids = elModalEdit.querySelectorAll("option.rid_akun");
+
+      [...elOptRids].forEach(rid => {
+        let idRid = rid.getAttribute("value");
+        if (rid.getAttribute("value") == id_akun2) {
           rid.setAttribute("selected", 'selected')
         }
       })
