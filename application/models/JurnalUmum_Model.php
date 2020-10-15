@@ -1,34 +1,47 @@
 	<?php
-	class Pemasukan_Model extends CI_Model
-	{  
+	class JurnalUmum_Model extends CI_Model
+	{ 
 
-        //Untuk menampilkan jurnal Penerimaan kas
-		public function select_pemasukan()
-		{  
-            $this->db->select ('*');
-            $this->db->from('t_m_transaksi a');
-            $this->db->join('t_t_jurnal b', 'a.id_transaksi=b.rid_transaksi');
-            $this->db->join('t_m_akun2 c', 'b.rid_akun=c.id_akun2');
-            $this->db->where("b.kredit",null);
-            $this->db->where("a.jenis_transaksi","1");
-            $pemasukan = $this->db->get();
-            return $pemasukan->result();
-		}
-        //Untuk nampilkan pada halaman daftar penerimaan_kas
-		public function select_penerimaan()
+        //Untuk menampilkan jurnal pengeluaran kas
+		public function select_data()
 		{  
             
             $this->db->select ('*');
             $this->db->from('t_m_transaksi a');
             $this->db->join('t_t_jurnal b', 'a.id_transaksi=b.rid_transaksi');
             $this->db->join('t_m_akun2 c', 'b.rid_akun=c.id_akun2');
-            $this->db->where("a.jenis_transaksi", "1");
             $this->db->where("b.kredit",null);
-            $penerimaan = $this->db->get();
-            return $penerimaan->result();
-		}
+            $beban = $this->db->get();
 
-	//untuk option value untuk dapat kas dan bank
+            return $beban->result();
+		}
+        //Untuk nampilkan pada halaman daftar_beban
+		public function select_beban()
+		{  
+            
+            $this->db->select ('*');
+            $this->db->from('t_m_transaksi a');
+            $this->db->join('t_t_jurnal b', 'a.id_transaksi=b.rid_transaksi');
+            $this->db->join('t_m_akun2 c', 'b.rid_akun=c.id_akun2');
+            $this->db->where("b.kredit",null);
+            $beban = $this->db->get();
+
+            return $beban->result();
+		}
+        //untuk option value ke daftar beban yang debit
+		public function getBebans()
+		{
+			$this->db->select('*');
+			$this->db->from('t_m_akun2  b');
+			$this->db->join('t_m_akun1 a', 'a.id_akun1=b.rid_akun1');
+			$this->db->where("b.rid_akun1", "9");
+			$this->db->or_where("b.rid_akun1", "5");
+			$this->db->or_where("b.rid_akun1", "6");
+			$beban = $this->db->get();
+
+			return $beban->result();
+		}
+        //untuk option value ke daftar kreditkan kepada di daftar beban
 		public function getKasBank()
 		{
 			$this->db->select('*');
@@ -40,22 +53,7 @@
 
 			return $beban->result(); 
 		}
-		//untuk dapatin apa yang jadi pemasukannya (kredit)
-		public function getPemasukans()
-		{
-			$this->db->select('*');
-			$this->db->from('t_m_akun2  b');
-			$this->db->join('t_m_akun1 a', 'a.id_akun1=b.rid_akun1');
-			$this->db->where("b.rid_akun1", "7");
-			$this->db->or_where("b.rid_akun1", "8");
-			$this->db->or_where("b.rid_akun1", "1");
-			$this->db->where("b.id_akun2", "82");
-			$pemasukan = $this->db->get();
-
-			return $pemasukan->result();
-		}
-
-        //Untuk inputkan data yang diinputkan pada daftar pemasukan
+        //Untuk inputkan data yang diinputkan pada daftar beban
 		function tambah1($data,$jurnal,$jurnal2)
 		{
 			$this->db->trans_start();
@@ -74,7 +72,7 @@
 		    return $this->db->insert_id(); 
 
 		}
-        //Menghapus data pemasukan dan relasinya ke tabel t_t_jurnal
+        //Menghapus data beban dan relasinya ke tabel t_t_jurnal
 		public function delete($id)
 		{
             $sql = "DELETE t_m_transaksi,t_t_jurnal 
@@ -86,7 +84,7 @@
 		}
 
         //Untuk edit ketiga data
-		public function update_pemasukan($data, $id, $jurnal, $jurnal2)
+		public function update_beban($data, $id, $jurnal, $jurnal2)
 		{
             $this->db->trans_start();
 
@@ -105,13 +103,12 @@
             $this->db->trans_complete(); 
 
 		}
-
-		//Untuk cek kode masuk
-		public function cekkodemasuk()
+        //Untuk mengecek kode beban pada database dan ditampilkan pada daftar beban.
+		public function cekkodebeban()
 		{
-			$query = $this->db->query("SELECT MAX(kode_transaksi) as kode_pemasukan from t_m_transaksi");
+			$query = $this->db->query("SELECT MAX(kode_transaksi) as kode_beban from t_m_transaksi");
 			$hasil = $query->row();
-			return $hasil->kode_pemasukan;
+			return $hasil->kode_beban;
 		}
 	}
 

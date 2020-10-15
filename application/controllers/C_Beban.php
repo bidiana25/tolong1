@@ -2,11 +2,13 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class C_Beban extends MY_Controller
-{
+{ 
 
   public function __construct()
   {
     parent::__construct();
+      $this->param = array();
+
 
     $this->load->model('Pengeluaran_model');
   }
@@ -21,16 +23,14 @@ class C_Beban extends MY_Controller
     $data = [
       "C_Beban" => $this->Pengeluaran_model->select_beban(),
       "bebans" => $this->Pengeluaran_model->getBebans(),
+      "kasbank" => $this->Pengeluaran_model->getKasBank(),
       "title" => "Daftar Beban/Biaya",
       "description" => "Daftar Beban/Biaya",
-      'kode_beban' => $kodeBebanSekarang
+      'kode_beban' => $kodeBebanSekarang,
+
     ];
     $this->render_backend('template/backend/pages/daftar_beban', $data);
   }
-
-
-
-
 
   public function delete($id)
   {
@@ -39,42 +39,34 @@ class C_Beban extends MY_Controller
     redirect('/C_Beban');
   }
 
-
   function tambah()
   {
-    $beban_tanggal = $this->input->post("beban_tanggal");
-    $rid_akun = $this->input->post("rid_akun");
-    $beban_nominal = $this->input->post("beban_nominal");
-    $beban_ket = $this->input->post("beban_ket");
-    $kode_beban = $this->input->post("kode_beban");
 
-    $data = array(
-      'beban_tanggal' => $beban_tanggal,
-      'rid_akun' => $rid_akun,
-      'beban_nominal' => $beban_nominal,
-      'beban_ket' => $beban_ket,
-      'kode_beban' => $kode_beban
-    );
+    $data=array(
+    'id_transaksi' => $this->input->post("id_transaksi"),
+    'tanggal_transaksi' => $this->input->post("tanggal_transaksi"),
+    'ket_transaksi' => $this->input->post("ket_transaksi"),
+    'kode_transaksi' => $this->input->post("kode_transaksi"),
+    'jenis_transaksi' => $this->input->post("jenis_transaksi")
+  );
 
-    //untuk di jurnalkk(keluar kas)
-    $jurnalkk_tanggal = $this->input->post("beban_tanggal");
-    $jurnalkk_rid = $this->input->post("rid_akun");
-    $debit_beban = $this->input->post("beban_nominal");
-    $kreditkas = $this->input->post("beban_nominal");
-    $kode_transaksi = $this->input->post("kode_beban");
+    $jurnal=array(
+    'id_jurnal' => $this->input->post("id_jurnal"),
+    'rid_akun' => $this->input->post("rid_akun_debit"),
+    'rid_transaksi' => $this->input->post("id_transaksi"),
+    'debit' => $this->input->post("debit")
+  );
 
-    $jkk = array(
-      'jurnalkk_tanggal' => $beban_tanggal,
-      'jurnalkk_rid' => $rid_akun,
-      'debit_beban' => $beban_nominal,
-      'kreditkas' => $beban_nominal,
-      'kode_transaksi' => $kode_beban
-    );
+ $jurnal2=array(
+    'id_jurnal' => $this->input->post("id_jurnal"),
+    'rid_akun' => $this->input->post("rid_akun_kredit"),
+    'rid_transaksi' => $this->input->post("id_transaksi"),
+    'kredit' => $this->input->post("debit")
+  );
 
     //model beban
-    $this->Pengeluaran_model->tambah1($data);
+    $this->Pengeluaran_model->tambah1($data,$jurnal,$jurnal2);
     //model jurnal keluar kas
-    $this->Pengeluaran_model->tambah2($jkk);
 
     $this->session->set_flashdata('notif', '<div class="alert alert-info icons-alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"> <i class="icofont icofont-close-line-circled"></i></button><p><strong>Data Beban Berhasil Ditambahkan!</strong></p></div>');
     redirect('C_Beban');
@@ -82,18 +74,27 @@ class C_Beban extends MY_Controller
 
   public function edit_action()
   {
-    $id = $this->input->post("id_beban");
-    $beban_tanggal = $this->input->post("beban_tanggal");
-    $rid_akun = $this->input->post("rid_akun");
-    $beban_nominal = $this->input->post("beban_nominal");
-    $beban_ket = $this->input->post("beban_ket");
-    $data = array(
-      'beban_tanggal' => $beban_tanggal,
-      'rid_akun' => $rid_akun,
-      'beban_nominal' => $beban_nominal,
-      'beban_ket' => $beban_ket
-    );
-    $this->Pengeluaran_model->update_beban($data, $id);
+    $id = $this->input->post("id_transaksi");
+
+    $data=array(
+    'tanggal_transaksi' => $this->input->post("tanggal_transaksi"),
+    'ket_transaksi' => $this->input->post("ket_transaksi"),
+    'kode_transaksi' => $this->input->post("kode_transaksi")
+  );
+
+    $jurnal=array(
+    'rid_akun' => $this->input->post("rid_akun_debit"),
+    'rid_transaksi' => $this->input->post("id_transaksi"),
+    'debit' => $this->input->post("debit")
+  );
+
+  $jurnal2=array(
+    'rid_akun' => $this->input->post("rid_akun_kredit"),
+    'rid_transaksi' => $this->input->post("id_transaksi"),
+    'kredit' => $this->input->post("debit")
+  );
+
+    $this->Pengeluaran_model->update_beban($data, $id, $jurnal, $jurnal2);
     $this->session->set_flashdata('notif', '<div class="alert alert-info icons-alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"> <i class="icofont icofont-close-line-circled"></i></button><p><strong>Data Beban Berhasil Diupdate!</strong></p></div>');
     redirect('/C_Beban');
   }

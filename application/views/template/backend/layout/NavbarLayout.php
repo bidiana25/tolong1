@@ -1,8 +1,9 @@
-<nav class="navbar header-navbar pcoded-header">
+<div class="">
+<nav class="navbar header-navbar pcoded-header iscollapsed">
     <div class="navbar-wrapper">
         <div class="navbar-logo">
-            <a href="index.html">
-                <img class="img-fluid" src="<?= base_url(); ?>assets/png/logo.png" alt="Theme-Logo" />
+            <a href="javascript:void(0)">
+                <img class="img-fluid" src="<?= base_url(); ?>assets/png/logo_insan.png" alt="Theme-Logo" />
             </a>
             <a class="mobile-menu" id="mobile-collapse" href="#!">
                 <i class="feather icon-menu icon-toggle-right"></i>
@@ -20,19 +21,19 @@
                 </li>
             </ul>
             <ul class="nav-right">
-                <li class="header-notification">
-                    
-                </li>
+                <li class="header-notification"></li>
                 <li class="user-profile header-notification">
                     <div class="dropdown-primary dropdown">
                         <div class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="<?= base_url(); ?>assets/jpg/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
+                            <img class="img-radius" alt="User-Profile-Image" src="<?= base_url('assets/images/'.$this->session->userdata('photo')); ?>">
+
                             <span><?php echo $this->session->userdata('nama') ?></span>
                             <i class="feather icon-chevron-down"></i>
                         </div>
                         <ul class="show-notification profile-notification dropdown-menu" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                             <li>
                                 <a href="#">
+                                    <a href="<?php echo base_url() ?>auth/profile/<?php echo $this->session->userdata('id'); ?>">
                                     <i class="feather icon-user"></i> Profile
                                 </a>
                             </li>
@@ -40,11 +41,12 @@
                                 <a href="<?php echo base_url('index.php/auth/logout'); ?>">
                                     <i class="feather icon-log-out"></i> Logout
                                 </a>
+
                             </li>
                         </ul>
                     </div>
                 </li>
-            </ul>
         </div>
     </div>
 </nav>
+</div>

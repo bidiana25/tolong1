@@ -4,7 +4,7 @@
   </div>
   <div class="card-block">
     <!-- Menampilkan notif !-->
-    <?= $this->session->flashdata('notif') ?>
+    <?= $this->session->flashdata('notif') ?> 
     <!-- Tombol untuk menambah data akun !-->
     <button data-toggle="modal" data-target="#addModal" class="btn btn-success waves-effect waves-light">Tambah Beban</button>
 
@@ -27,19 +27,19 @@
           foreach ($C_Beban as $key => $value) {
           ?>
             <td><?php echo $key + 1; ?></td>
-            <td><?php echo $value->kode_beban; ?></td>
-            <td><?php echo $value->beban_tanggal; ?></td>
+            <td><?php echo $value->kode_transaksi; ?></td>
+            <td><?php echo $value->tanggal_transaksi; ?></td>
             <td><?php echo $value->nama_akun2; ?></td>
-            <td><?php echo rupiah($value->beban_nominal); ?></td>
-            <td><?php echo $value->beban_ket; ?></td>
+            <td><?php echo rupiah($value->debit); ?></td>
+            <td><?php echo $value->ket_transaksi; ?></td>
             <td>
               <!--Edit-->
-              <a href="javascript:void(0);" data-toggle="modal" data-target="#Modal_Edit" class="btn-edit" data-id="<?php echo $value->id_beban; ?>">
+              <a href="javascript:void(0);" data-toggle="modal" data-target="#Modal_Edit" class="btn-edit" data-id="<?php echo $value->id_transaksi; ?>">
                 <i class="icon feather icon-edit f-w-600 f-16 m-r-15 text-c-green"></i>
               </a>
 
               <!--Hapus-->
-              <a href="<?php echo site_url('C_Beban/delete/' . $value->id_beban) ?>" onclick="return confirm('Apakah kamu yakin ingin menghapus data ini?')"> <i class="feather icon-trash-2 f-w-600 f-16 text-c-red"></i></a>
+              <a href="<?php echo site_url('C_Beban/delete/' . $value->id_transaksi) ?>" onclick="return confirm('Apakah kamu yakin ingin menghapus data ini?')"> <i class="feather icon-trash-2 f-w-600 f-16 text-c-red"></i></a>
             </td>
 
 
@@ -70,20 +70,21 @@
         </div>
 
         <div class="modal-body">
+            <div class="">
 
           <div class="form-group">
             <label>Tanggal Beban</label>
-            <input type="date" class="form-control" name="beban_tanggal">
+            <input type="date" placeholder="yyyy-mm-dd" class="form-control datepicker" name="tanggal_transaksi">
           </div>
 
           <div class="form-group">
             <label>Kode Beban</label>
-            <input type="text" class="form-control" id="kode_beban" name="kode_beban" value="BB<?php echo sprintf("%04s", $kode_beban) ?>" readonly>
+            <input type="text" class="form-control" id="kode_transaksi" name="kode_transaksi" value="BB<?php echo sprintf("%04s", $kode_beban) ?>" readonly>
           </div>
-
+                          
           <div class="form-group">
-            <label>Jenis Beban</label>
-            <select name="rid_akun" class="form-control" value="rid_akun">
+            <label>Jenis Beban (Debit)</label>
+            <select name="rid_akun_debit" class="form-control" value="rid_akun_debit">
               <?php
               $groupid = 001;
               $star = false;
@@ -103,14 +104,37 @@
           </div>
 
           <div class="form-group">
-            <label>Nominal Beban</label>
-            <input type="text" class="form-control" name="beban_nominal" placeholder="Nominal Beban">
+            <label>Nominal</label>
+            <input type="text" class="form-control" name="debit" placeholder="Debit">
+          </div>
+
+          <div class="form-group">
+            <label>Di Kreditkan Kepada</label>
+            <select name="rid_akun_kredit" class="form-control" value="rid_akun_kredit">
+              <?php
+              $groupid = 001;
+              $star = false;
+              foreach ($kasbank as $row) : ?>
+                <?php if ($row->id_akun1 != $groupid) : ?>
+                  <?= $star ? "</optgroup>" : ''; ?>
+                  <optgroup label="<?= $row->nama_akun1; ?>">
+                    <option class="rid_akun_kredit" value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
+                    <?php $groupid = $row->id_akun1;
+                    $start = true; ?>
+                  <?php else : ?>
+                    <option class="rid_akun_kredit" value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
+                <?php endif;
+              endforeach; ?>
+                  </optgroup>
+            </select>
           </div>
 
           <div class="form-group">
             <label>Keterangan</label>
-            <input type="text" class="form-control" name="beban_ket" placeholder="Keterangan">
+            <input type="text" class="form-control" name="ket_transaksi" placeholder="Keterangan">
           </div>
+
+          <input type="text" hidden="" name="jenis_transaksi" value="2" placeholder="jenisnya apa">
 
 
 
@@ -120,13 +144,14 @@
           <button type="Submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
         </div>
       </div>
+      </div>
     </div>
   </div>
 </form>
 <!-- MODAL TAMBAH AKUN! SELESAI !-->
 
-<!-- MODAL EDIT AKUN !-->
 
+<!-- MODAL EDIT AKUN !-->
 <div class="modal fade" id="Modal_Edit" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <form action="<?php echo base_url('C_Beban/edit_action') ?>" method="post">
@@ -141,24 +166,22 @@
         <div class="modal-body">
           <h5>Edit Daftar Beban</h5>
 
-          <div class="form-group">
-            <label></label>
-            <input type="text" class="form-control" hidden="" name="id_beban" value="">
-          </div>
-
+            <input type="text" class="form-control" hidden="" name="id_transaksi" value="">
+            <br/>
+            
           <div class="form-group">
             <label>Tanggal Beban</label>
-            <input type="date" class="form-control" name="beban_tanggal">
+            <input type="date" class="form-control" name="tanggal_transaksi">
           </div>
 
           <div class="form-group">
             <label>Kode Beban</label>
-            <input type="text" class="form-control" id="kode_beban" name="kode_beban" value="BB<?php echo sprintf("%04s", $kode_beban) ?>" readonly>
+            <input type="text" class="form-control" id="kode_transaksi" name="kode_transaksi" value="BB<?php echo sprintf("%04s", $kode_beban) ?>" readonly>
           </div>
 
           <div class="form-group">
             <label>Jenis Beban</label>
-            <select name="rid_akun" class="form-control" value="rid_akun">
+            <select name="rid_akun_debit" class="form-control" value="rid_akun_debit">
               <?php
               $groupid = 001;
               $star = false;
@@ -166,11 +189,11 @@
                 <?php if ($row->id_akun1 != $groupid) : ?>
                   <?= $star ? "</optgroup>" : ''; ?>
                   <optgroup label="<?= $row->nama_akun1; ?>">
-                    <option class="rid_akun" value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
+                    <option class="rid_akun_debit" value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
                     <?php $groupid = $row->id_akun1;
                     $start = true; ?>
                   <?php else : ?>
-                    <option class="rid_akun" value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
+                    <option class="rid_akun_debit" value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
                 <?php endif;
               endforeach; ?>
                   </optgroup>
@@ -179,12 +202,33 @@
 
           <div class="form-group">
             <label>Nominal Beban</label>
-            <input type="text" class="form-control" name="beban_nominal" placeholder="Nominal Beban">
+            <input type="text" class="form-control" name="debit" placeholder="Nominal Beban">
+          </div>
+
+          <div class="form-group">
+            <label>Di Kreditkan Kepada</label>
+            <select name="rid_akun_kredit" class="form-control" value="rid_akun_kredit">
+              <?php
+              $groupid = 001;
+              $star = false;
+              foreach ($kasbank as $row) : ?>
+                <?php if ($row->id_akun1 != $groupid) : ?>
+                  <?= $star ? "</optgroup>" : ''; ?>
+                  <optgroup label="<?= $row->nama_akun1; ?>">
+                    <option class="rid_akun_kredit" value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
+                    <?php $groupid = $row->id_akun1;
+                    $start = true; ?>
+                  <?php else : ?>
+                    <option class="rid_akun_kredit" value="<?= $row->id_akun2; ?>"><?php echo $row->kode_akun2 . ' ' . '-' . ' ' . $row->nama_akun2; ?></option>
+                <?php endif;
+              endforeach; ?>
+                  </optgroup>
+            </select>
           </div>
 
           <div class="form-group">
             <label>Keterangan</label>
-            <input type="text" class="form-control" name="beban_ket" placeholder="Keterangan">
+            <input type="text" class="form-control" name="ket_transaksi" placeholder="Keterangan">
           </div>
 
 
@@ -199,9 +243,13 @@
 </div>
 <!-- MODAL EDIT AKUN! SELESAI !-->
 
+
+<!-- SCRIPT UNTUK DATA EDIT !-->
 <script>
   const bebans = <?= json_encode($C_Beban) ?>;
+  const kasbank = <?= json_encode($C_Beban) ?>;
   const rids = <?= json_encode($bebans) ?>;
+  const rids1 = <?= json_encode($kasbank) ?>;
   let elModalEdit = document.querySelector("#Modal_Edit");
   console.log(elModalEdit);
   let elBtnEdits = document.querySelectorAll(".btn-edit");
@@ -209,26 +257,27 @@
     edit.addEventListener("click", (e) => {
       let id = edit.getAttribute("data-id");
       let Beban = bebans.filter(beban => {
-        if (beban.id_beban == id)
+        if (beban.id_transaksi == id)
           return beban;
       });
       const {
-        id_beban,
-        beban_tanggal,
-        rid_akun,
-        beban_nominal,
-        beban_ket,
+        id_transaksi,
+        tanggal_transaksi,
+        rid_akun_debit,
+        rid_akun_kredit,
+        debit,
+        ket_transaksi,
         id_akun2,
-        kode_beban
+        kode_transaksi
       } = Beban[0];
 
       console.log(Beban[0]);
-      elModalEdit.querySelector("[name=id_beban]").value = id_beban;
-      elModalEdit.querySelector("[name=beban_tanggal]").value = beban_tanggal;
-      elModalEdit.querySelector("[name=beban_nominal]").value = beban_nominal;
-      elModalEdit.querySelector("[name=beban_ket]").value = beban_ket;
-      elModalEdit.querySelector("[name=kode_beban]").value = kode_beban;
-      let elOptRids = elModalEdit.querySelectorAll("option.rid_akun");
+      elModalEdit.querySelector("[name=id_transaksi]").value = id_transaksi;
+      elModalEdit.querySelector("[name=tanggal_transaksi]").value = tanggal_transaksi;
+      elModalEdit.querySelector("[name=debit]").value = debit;
+      elModalEdit.querySelector("[name=ket_transaksi]").value = ket_transaksi;
+      elModalEdit.querySelector("[name=kode_transaksi]").value = kode_transaksi;
+      let elOptRids = elModalEdit.querySelectorAll("option.rid_akun_debit","option.rid_akun_kredit");
 
       [...elOptRids].forEach(rid => {
         let idRid = rid.getAttribute("value");
@@ -236,9 +285,6 @@
           rid.setAttribute("selected", 'selected')
         }
       })
-
-
-
     })
   })
 </script>

@@ -6,8 +6,8 @@ class Page extends MY_Controller {
 	public function home(){
 		$data = [
 			
-			"title" => "Daftar Akun",
-			"description" => "Daftar Akun/COA Pada Akuntansi"
+			"title" => "Dashboard SIA",
+			"description" => "Sistem Informasi Akuntansi"
 		  ];
 		// function render_backend tersebut dari file core/MY_Controller.php
 		$this->render_backend('home',$data); // load view home.php

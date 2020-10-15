@@ -7,6 +7,8 @@ class MY_Controller extends CI_Controller
         parent::__construct();
 
         $this->authenticated(); // Panggil fungsi authenticated
+        $this->userdata = $this->session->userdata('userdata');
+        $this->session->set_flashdata('segment', explode('/', $this->uri->uri_string()));
     }
 
     public function authenticated()
@@ -39,4 +41,5 @@ class MY_Controller extends CI_Controller
         $data['content'] = $this->load->view($page, '', true);
         $this->load->view('template/backend/AdminTemplate', $data);
     }
+
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 22, 2020 at 08:37 AM
+-- Generation Time: Oct 15, 2020 at 03:02 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -21,78 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `sia_sekolah`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `jurnal_kk`
---
-
-CREATE TABLE `jurnal_kk` (
-  `id_jurnalkk` int(11) NOT NULL,
-  `jurnalkk_tanggal` date NOT NULL,
-  `jurnalkk_rid` int(11) NOT NULL,
-  `debit_beban` bigint(20) NOT NULL,
-  `debit_perlengkapan` bigint(20) NOT NULL,
-  `debit_hutang` bigint(20) NOT NULL,
-  `kreditkas` bigint(20) NOT NULL,
-  `kode_transaksi` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `jurnal_kk`
---
-
-INSERT INTO `jurnal_kk` (`id_jurnalkk`, `jurnalkk_tanggal`, `jurnalkk_rid`, `debit_beban`, `debit_perlengkapan`, `debit_hutang`, `kreditkas`, `kode_transaksi`) VALUES
-(12, '2020-09-23', 44, 1000, 0, 0, 1000, 'BB0002'),
-(13, '2020-09-24', 46, 1000000, 0, 0, 1000000, 'BB0003'),
-(14, '2020-09-24', 50, 5000000, 0, 0, 5000000, 'BB0004');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tm_beban`
---
-
-CREATE TABLE `tm_beban` (
-  `id_beban` int(11) NOT NULL,
-  `beban_tanggal` date NOT NULL,
-  `rid_akun` int(11) NOT NULL,
-  `beban_nominal` bigint(20) NOT NULL,
-  `beban_ket` varchar(255) NOT NULL,
-  `kode_beban` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `tm_beban`
---
-
-INSERT INTO `tm_beban` (`id_beban`, `beban_tanggal`, `rid_akun`, `beban_nominal`, `beban_ket`, `kode_beban`) VALUES
-(38, '2020-09-23', 44, 1000, '', 'BB0002'),
-(39, '2020-09-24', 46, 1000000, 'Sewa', 'BB0003');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tm_pemasukan`
---
-
-CREATE TABLE `tm_pemasukan` (
-  `id_pemasukan` int(11) NOT NULL,
-  `tanggal_pemasukan` date NOT NULL,
-  `nominal_pemasukan` bigint(20) NOT NULL,
-  `kategori_pemasukan` varchar(255) NOT NULL,
-  `keterangan_pemasukan` varchar(255) NOT NULL,
-  `jenis_pemasukan` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `tm_pemasukan`
---
-
-INSERT INTO `tm_pemasukan` (`id_pemasukan`, `tanggal_pemasukan`, `nominal_pemasukan`, `kategori_pemasukan`, `keterangan_pemasukan`, `jenis_pemasukan`) VALUES
-(4, '2020-09-15', 1000000, 'Uang Komite', 'SPP dari Anak Kelas 3', 'Bank'),
-(5, '2020-09-16', 500000, 'Infak Pembangunan', 'Uang Dodit', 'Bank');
 
 -- --------------------------------------------------------
 
@@ -187,14 +115,60 @@ INSERT INTO `t_m_akun2` (`id_akun2`, `rid_akun1`, `kode_akun2`, `nama_akun2`, `k
 (78, 5, '21500', 'Hutang Lancar Lainnya', '', 0),
 (79, 6, '22100', 'Hutang Bank', '', 0),
 (80, 3, '11110', 'Kas', '', 0),
-(82, 3, '11130', 'Piutang Usaha', '', 0),
+(82, 1, '11130', 'Piutang', '', 0),
 (83, 3, '11140', 'Perlengkapan', '', 0),
-(84, 1, '12100', 'Bangunan', '', 0),
+(84, 1, '12100', 'Bangunan Sekolah', '', 0),
 (85, 1, '12200', 'Tanah', '', 0),
 (86, 1, '12300', 'Perabotan', '', 0),
 (87, 1, '12400', 'Kendaraan', '', 0),
 (88, 1, '12500', 'Teknologi', '', 0),
-(89, 9, '5999', 'Beban Bidiana', '', 0);
+(92, 3, '11120', 'Bank', '', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `t_m_transaksi`
+--
+
+CREATE TABLE `t_m_transaksi` (
+  `id_transaksi` int(11) NOT NULL,
+  `tanggal_transaksi` date NOT NULL,
+  `ket_transaksi` varchar(255) NOT NULL,
+  `kode_transaksi` varchar(50) NOT NULL,
+  `jenis_transaksi` varchar(20) NOT NULL COMMENT '1) Pemasukan 2) Pengeluaran'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `t_m_transaksi`
+--
+
+INSERT INTO `t_m_transaksi` (`id_transaksi`, `tanggal_transaksi`, `ket_transaksi`, `kode_transaksi`, `jenis_transaksi`) VALUES
+(111, '2020-10-14', 'Hai kamu', 'BB0001', '2'),
+(115, '2020-10-15', 'Pemasukan bank', 'PM0002', '1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `t_t_jurnal`
+--
+
+CREATE TABLE `t_t_jurnal` (
+  `id_jurnal` int(11) NOT NULL,
+  `rid_akun` int(11) NOT NULL,
+  `rid_transaksi` int(11) DEFAULT NULL,
+  `debit` bigint(20) DEFAULT NULL,
+  `kredit` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `t_t_jurnal`
+--
+
+INSERT INTO `t_t_jurnal` (`id_jurnal`, `rid_akun`, `rid_transaksi`, `debit`, `kredit`) VALUES
+(45, 39, 111, 9000, NULL),
+(46, 80, 111, NULL, 9000),
+(47, 92, 115, 60000, NULL),
+(48, 58, 115, NULL, 60000);
 
 -- --------------------------------------------------------
 
@@ -207,40 +181,23 @@ CREATE TABLE `user` (
   `username` varchar(30) NOT NULL,
   `password` varchar(50) NOT NULL,
   `nama` varchar(200) NOT NULL,
-  `role` enum('yayasan','bendahara','') NOT NULL
+  `email` varchar(50) NOT NULL,
+  `role` enum('yayasan','bendahara','') NOT NULL,
+  `photo` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `password`, `nama`, `role`) VALUES
-(1, 'yayasan', 'e62f7824c7aab9dfc2d8ca00448afbfa', 'Bapak Cuk', 'yayasan'),
-(2, 'bendahara', '62f7dec74b78ba0398e6a9f317f55126', 'Bendahara Sekolah', 'bendahara');
+INSERT INTO `user` (`id`, `username`, `password`, `nama`, `email`, `role`, `photo`) VALUES
+(1, 'yayasan', 'yayasan', 'Mr Cuk', 'yayasan@gmail.com', 'yayasan', 'avatar-1.jpg'),
+(2, 'bendahara', 'bendahara123', 'Bendahara', 'bendaharaajah@gmail.com', 'bendahara', 'avatar-5.jpg'),
+(3, 'bidiana', 'bidiana', 'Bidiana ', 'bidianazhazta@gmail.com', 'yayasan', 'bidiana.jpg');
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `jurnal_kk`
---
-ALTER TABLE `jurnal_kk`
-  ADD PRIMARY KEY (`id_jurnalkk`),
-  ADD KEY `jurnalkk_rid` (`jurnalkk_rid`);
-
---
--- Indexes for table `tm_beban`
---
-ALTER TABLE `tm_beban`
-  ADD PRIMARY KEY (`id_beban`),
-  ADD KEY `akun` (`rid_akun`);
-
---
--- Indexes for table `tm_pemasukan`
---
-ALTER TABLE `tm_pemasukan`
-  ADD PRIMARY KEY (`id_pemasukan`);
 
 --
 -- Indexes for table `t_m_akun1`
@@ -256,6 +213,20 @@ ALTER TABLE `t_m_akun2`
   ADD KEY `rid_akun1` (`rid_akun1`);
 
 --
+-- Indexes for table `t_m_transaksi`
+--
+ALTER TABLE `t_m_transaksi`
+  ADD PRIMARY KEY (`id_transaksi`);
+
+--
+-- Indexes for table `t_t_jurnal`
+--
+ALTER TABLE `t_t_jurnal`
+  ADD PRIMARY KEY (`id_jurnal`),
+  ADD KEY `rid_akun` (`rid_akun`),
+  ADD KEY `rid_beban` (`rid_transaksi`);
+
+--
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
@@ -264,24 +235,6 @@ ALTER TABLE `user`
 --
 -- AUTO_INCREMENT for dumped tables
 --
-
---
--- AUTO_INCREMENT for table `jurnal_kk`
---
-ALTER TABLE `jurnal_kk`
-  MODIFY `id_jurnalkk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
-
---
--- AUTO_INCREMENT for table `tm_beban`
---
-ALTER TABLE `tm_beban`
-  MODIFY `id_beban` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
-
---
--- AUTO_INCREMENT for table `tm_pemasukan`
---
-ALTER TABLE `tm_pemasukan`
-  MODIFY `id_pemasukan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `t_m_akun1`
@@ -293,29 +246,29 @@ ALTER TABLE `t_m_akun1`
 -- AUTO_INCREMENT for table `t_m_akun2`
 --
 ALTER TABLE `t_m_akun2`
-  MODIFY `id_akun2` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
+  MODIFY `id_akun2` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+
+--
+-- AUTO_INCREMENT for table `t_m_transaksi`
+--
+ALTER TABLE `t_m_transaksi`
+  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
+
+--
+-- AUTO_INCREMENT for table `t_t_jurnal`
+--
+ALTER TABLE `t_t_jurnal`
+  MODIFY `id_jurnal` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `jurnal_kk`
---
-ALTER TABLE `jurnal_kk`
-  ADD CONSTRAINT `jurnal_kk_ibfk_2` FOREIGN KEY (`jurnalkk_rid`) REFERENCES `t_m_akun2` (`id_akun2`);
-
---
--- Constraints for table `tm_beban`
---
-ALTER TABLE `tm_beban`
-  ADD CONSTRAINT `akun` FOREIGN KEY (`rid_akun`) REFERENCES `t_m_akun2` (`id_akun2`);
 
 --
 -- Constraints for table `t_m_akun2`

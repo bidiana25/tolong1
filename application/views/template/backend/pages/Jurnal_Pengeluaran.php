@@ -25,6 +25,7 @@
             <!-- <th style="font-size: 13px;text-align: center;">HPP</th> -->
 
             <th style="font-size: 13px;text-align: center;">Kas</th>
+            <th style="font-size: 13px;text-align: center;">Bank</th>
             <!-- <th style="font-size: 13px;text-align: center;">Persediaan</th> -->
             <!-- <th style="font-size: 13px;text-align: center;">Persediaan</th> -->
           </tr>
@@ -35,23 +36,34 @@
           <?php
           $totalBeban = 0;
           $totalHutan = 0;
+          $totalKas = 0;
+          $totalBank = 0;
           foreach ($pengeluaran_kas as $key => $value) {
           ?>
 
             <tr class="odd gradeX">
-              <td style="font-size: 13px"> <?php echo ($value->beban_tanggal) ?> </td>
-              <td style="font-size: 13px"> <?php echo ($value->kode_beban) ?> </td>
-              <td style="font-size: 13px"> <?php echo ($value->beban_ket) ?> </td>
+              <td style="font-size: 13px"> <?php echo ($value->tanggal_transaksi) ?> </td>
+              <td style="font-size: 13px"> <?php echo ($value->kode_transaksi) ?> </td>
+              <td style="font-size: 13px"> <?php echo ($value->nama_akun2) ?> </td>
 
+              <!-- Untuk Segala Macam Beban !-->
               <td style="font-size: 13px"> <?php if ($value->rid_akun1 == 9) {
-                                              $totalBeban += $value->beban_nominal;
-                                              echo rupiah($value->beban_nominal);
+                                              $totalBeban += $value->debit;
+                                              echo rupiah($value->debit);
                                             } ?> </td>
-              <td style="font-size: 13px"> <?php if ($value->rid_akun1 == 6 || $value->rid_akun1 == 5) {
-                                              $totalHutan += $value->beban_nominal;
-                                              echo rupiah($value->beban_nominal);
+
+            <!-- Untuk Segala Macam Hutang !-->
+             <td style="font-size: 13px"> <?php if ($value->rid_akun1 == 6 || $value->rid_akun1 == 5) {
+                                              $totalHutan += $value->debit;
+                                              echo rupiah($value->debit);
                                             } ?> </td>
-              <td style="font-size: 13px"> <?php echo rupiah($value->beban_nominal); ?> </td>
+              <!-- Untuk KAS !-->
+              <td style="font-size: 13px"> <?php if ($value->id_akun2 == 80) {
+                                              $totalKas += $value->kredit;
+                                              echo rupiah($value->kredit);
+                                            } ?> </td>
+              <!-- Untuk BANK !-->
+              <td style="font-size: 13px"> <?php echo rupiah($value->debit); ?> </td>
             </tr>
 
 
@@ -65,6 +77,7 @@
           <!-- SUM BEBAN -->
           <th style="text-align:right"> <?php echo rupiah($totalBeban); ?> </th>
           <th style="text-align:right"> <?php echo rupiah($totalHutan); ?> </th>
+          <th style="text-align:right"> <?php echo rupiah($totalHutan + $totalBeban); ?> </th>
           <th style="text-align:right"> <?php echo rupiah($totalHutan + $totalBeban); ?> </th>
         </tr>
 

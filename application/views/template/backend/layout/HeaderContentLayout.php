@@ -2,7 +2,7 @@
     <div class="row align-items-end">
         <div class="col-lg-8">
             <div class="page-header-title">
-                <i class="feather icon-watch bg-c-blue"></i>
+                <i class="icon feather icon-aperture bg-c-blue"> </i>
                 <div class="d-inline">
                     <h5><?= $title ? $title : "Ini Title Content"; ?></h5>
                     <span><?= $description  ? $description : "Ini deskripsi content"; ?></span>

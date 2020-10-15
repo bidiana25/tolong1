@@ -45,6 +45,11 @@
 
     <link rel="stylesheet" type="text/css" href="<?= base_url()?>assets/css/style.css">
     <link rel="stylesheet" type="text/css" href="<?= base_url()?>assets/css/pages.css">
+    <link rel="stylesheet" type="text/css" href="<?= base_url()?>assets/css/widget.css">
+
+    <link rel="stylesheet" type="text/css" href="<?= base_url()?>assets/css/font-awesome-n.min.css">
+
+    <link rel="stylesheet" href="<?= base_url()?>assets/css/chartist.css" type="text/css" media="all">
 
 
 </head>
@@ -146,6 +151,19 @@
     </script>
     <script src="<?php echo base_url() ?>assets/js/rocket-loader.min.js" data-cf-settings="1dc21dc544476ddffbc54af6-|49" defer=""></script>
 
+<script src="<?php echo base_url() ?>assets/js/jquery.flot.js" type="2d8d78e876b340f9029c575b-text/javascript"></script>
+<script src="<?php echo base_url() ?>assets/js/jquery.flot.categories.js" type="2d8d78e876b340f9029c575b-text/javascript"></script>
+<script src="<?php echo base_url() ?>assets/js/curvedlines.js" type="2d8d78e876b340f9029c575b-text/javascript"></script>
+<script src="<?php echo base_url() ?>assets/js/jquery.flot.tooltip.min.js" type="2d8d78e876b340f9029c575b-text/javascript"></script>
+
+<script src="<?php echo base_url() ?>assets/js/amcharts.js" type="2d8d78e876b340f9029c575b-text/javascript"></script>
+<script src="<?php echo base_url() ?>assets/js/serial.js" type="2d8d78e876b340f9029c575b-text/javascript"></script>
+<script src="<?php echo base_url() ?>assets/js/light.js" type="2d8d78e876b340f9029c575b-text/javascript"></script>
+
+
+
+
+
     <script>
         // get url 
         var path = window.location.href;
@@ -186,6 +204,8 @@
 
         }
     </script>
+
+
 </body>
 
 <!-- Mirrored from colorlib.com/polygon/admindek/default/sample-page.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 12 Dec 2019 16:10:10 GMT -->

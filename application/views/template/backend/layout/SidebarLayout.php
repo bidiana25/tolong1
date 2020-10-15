@@ -15,12 +15,7 @@
                 <a href="<?= base_url("c_akun"); ?>" class="waves-effect waves-dark submenu">
                     <span class="pcoded-mtext">Daftar Akun</span>
                 </a>
-            </li>
-            <li class="">
-                <a href="dashboard-analytics.html" class="waves-effect waves-dark submenu">
-                    <span class="pcoded-mtext">Daftar Aset (Peralatan) </span>
-                </a>
-            </li>
+        </li>
             <li class="">
                 <a href="<?= base_url("c_pemasukan"); ?>" class="waves-effect waves-dark submenu">
                     <span class="pcoded-mtext">Penerimaan Kas</span>
@@ -37,12 +32,12 @@
     <!-- Menu ke dua -->
     <li class="pcoded-hasmenu">
         <a href="javascript:void(0)" class="waves-effect waves-dark">
-            <span class="pcoded-micon"><i class="feather icon-home"></i></span>
+            <span class="pcoded-micon"><i class="feather icon-list"></i></span>
             <span class="pcoded-mtext">Jurnal</span>
         </a>
         <ul class="pcoded-submenu">
         <li class="">
-                <a href="diam.html" class="submenu waves-effect waves-dark">
+                <a href="<?= base_url("c_jurpenkas"); ?>" class="submenu waves-effect waves-dark">
                     <span class="pcoded-mtext">Jurnal Penerimaan Kas</span>
                 </a>
             </li>
@@ -58,12 +53,12 @@
 
         <li class="pcoded-hasmenu">
         <a href="javascript:void(0)" class="waves-effect waves-dark">
-            <span class="pcoded-micon"><i class="feather icon-home"></i></span>
+            <span class="pcoded-micon"><i class="feather icon-layers"></i></span>
             <span class="pcoded-mtext">Laporan Keuangan</span>
         </a>
         <ul class="pcoded-submenu">
         <li class="">
-                <a href="belum.html" class="submenu waves-effect waves-dark">
+                <a href="<?= base_url("c_jum"); ?>" class="submenu waves-effect waves-dark">
                     <span class="pcoded-mtext">Jurnal Umum</span>
                 </a>
             </li>
@@ -97,11 +92,20 @@
 
         <!-- Diluar Grouping disini -->
         <li class="">
-        <a href="belum.html" class="waves-effect waves-dark">
+        <a href="belum.html" class="sendirian waves-effect waves-dark">
         <span class="pcoded-micon">
         <i class="feather icon-credit-card"></i>
         </span>
         <span class="pcoded-mtext">Buku Besar</span>
+        </a>
+        </li>
+
+        <li <?php if($this->uri->segment(2)=="profile"){echo 'class="active"';}?>>
+        <a href="<?php echo base_url() ?>auth/profile/<?php echo $this->session->userdata('id'); ?>" class="waves-effect waves-dark">
+        <span class="pcoded-micon">
+        <i class="feather icon-settings"></i>
+        </span>
+        <span class="pcoded-mtext">Info User</span>
         </a>
         </li>
 

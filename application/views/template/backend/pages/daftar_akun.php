@@ -238,7 +238,7 @@
               </a>
 
               <!--Hapus-->
-              <a href="<?php echo site_url('C_Akun8/delete/' . $value->id_akun2) ?>" onclick="return confirm('Apakah kamu yakin ingin menghapus data ini?')"> <i class="feather icon-trash-2 f-w-600 f-16 text-c-red"></i></a>
+              <a href="<?php echo site_url('C_Akun/delete/' . $value->id_akun2) ?>" onclick="return confirm('Apakah kamu yakin ingin menghapus data ini?')"> <i class="feather icon-trash-2 f-w-600 f-16 text-c-red"></i></a>
             </td>
 
 
